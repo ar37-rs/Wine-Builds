@@ -91,7 +91,7 @@ export DO_NOT_COMPILE="false"
 # Make sure that ccache is installed before enabling this.
 export USE_CCACHE="${USE_CCACHE:-false}"
 
-export WINE_BUILD_OPTIONS="--disable-winemenubuilder --disable-win16 --enable-win64 --disable-tests --without-capi --without-coreaudio --without-cups --without-gphoto --without-osmesa --without-oss --without-pcap --without-pcsclite --without-sane --without-udev --without-unwind --without-usb --without-v4l2 --without-wayland --without-xinerama"
+export WINE_BUILD_OPTIONS="--enable_faudio --disable-winemenubuilder --disable-win16 --enable-win64 --disable-tests --without-capi --without-coreaudio --without-cups --without-gphoto --without-osmesa --without-oss --without-pcap --without-pcsclite --without-sane --without-udev --without-unwind --without-usb --without-v4l2 --without-wayland --without-xinerama"
 
 # A temporary directory where the Wine source code will be stored.
 # Do not set this variable to an existing non-empty directory!
@@ -113,7 +113,7 @@ if [ "${EXPERIMENTAL_WOW64}" = "true" ]; then
    export CROSSCC_X64="x86_64-w64-mingw32-gcc"
    export CROSSCXX_X64="x86_64-w64-mingw32-g++"
 
-   export CFLAGS_X64="-march=x86-64 -msse3 -mfpmath=sse -O3 -ftree-vectorize"
+   export CFLAGS_X64="-march=x86-64 -msse3 -mfpmath=sse -O3 -ftree-vectorize -pipe"
    export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
    
    export CROSSCFLAGS_X64="${CFLAGS_X64}"
@@ -535,13 +535,14 @@ if [ ! -d wine ]; then
 fi
 
 cd wine || exit 1
+echo "Fixing Input Bridge..."
 if [ "$WINE_BRANCH" = "vanilla" ]; then
 git revert --no-commit 2bfe81e41f93ce75139e3a6a2d0b68eb2dcb8fa6 || {
         echo "Error: Failed to revert one or two patches. Stopping."
         exit 1
     }
    clear
-elif [ "$WINE_BRANCH" = "staging" ]; then
+elif [ "$WINE_BRANCH" = "staging" ] || [ "$WINE_BRANCH" = "staging-tkg" ]; then
 patch -p1 -R < "${scriptdir}"/inputbridgefix.patch || {
         echo "Error: Failed to revert one or two patches. Stopping."
         exit 1
@@ -549,12 +550,18 @@ patch -p1 -R < "${scriptdir}"/inputbridgefix.patch || {
    clear
 fi
 
+echo "Applying CPU topology patch"
 if [ "$WINE_BRANCH" = "staging" ]; then
 patch -p1 < "${scriptdir}"/wine-cpu-topology.patch || {
         echo "Error: Failed to revert one or two patches. Stopping."
         exit 1
     }
    clear
+elif [ "WINE_BRANCH" = "staging-tkg" ]; then
+patch -p1 < "${scriptdir}"/wine-cpu-topology-tkg.patch || {
+        echo "Error: Failed to apply one or two patches. Stopping."
+        exit 1
+    }
 fi
 
 ### Experimental addition to address space hackery
