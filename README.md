@@ -1,6 +1,6 @@
 ## Introduction
 
-This is essentially a repurposed Wine build script which was made by a fellow legend Kron4ek. It was modified in such a way where it would be feasible to build Wine for Termux Glibc environment. It requires certain changes like different path locations, modified memory addresses due to how different Termux's root file system is and how it works in general. Without these changes, regular Wine builds would not be usable in any way, shape or form.
+This is essentially a repurposed Wine build script which was made by a fellow legend Kron4ek. It was modified in such a way where it would be feasible to build Wine for Termux Glibc environment. It requires certain changes like different path locations, modified memory addresses due to how different Termux's root file system is and how it works in general. Without these changes, regular Wine builds would not be usable in any way, shape or form..
 
 It is based on Kron4ek's build script, which is used by many, and this fork is customized in a few ways:
 
