@@ -4,7 +4,7 @@
 ###
 ## A script for Wine compilation.
 ## By default it uses two Ubuntu bootstraps (x32 and x64), which it enters
-## with bubblewrap (root rights are not required).
+## with bubblewrap (root rights are not required)..
 ##
 ## This script requires: git, wget, autoconf, xz, bubblewrap
 ##
