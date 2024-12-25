@@ -513,11 +513,11 @@ fi
 # NDIS patch for fixing crappy Android's SELinux limitations.
 if [ "$TERMUX_GLIBC" = "true" ]; then
 echo "Circumventing crappy SELinux's limitations... (Thanks BrunoSX)"
-patch -d wine -Np1 < "${scriptdir}"/ndis.patch || {
-        echo "Error: Failed to apply one or more patches."
-        exit 1
-    }
-    clear
+# patch -d wine -Np1 < "${scriptdir}"/ndis.patch || {
+#       echo "Error: Failed to apply one or more patches."
+#       exit 1
+#   }
+#  clear
 else
 echo "Circumventing crappy SELinux's limitations... (Thanks BrunoSX)"
 patch -d wine -Np1 < "${scriptdir}"/ndis-proot.patch || {
