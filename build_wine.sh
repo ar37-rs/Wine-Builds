@@ -517,7 +517,7 @@ echo "Circumventing crappy SELinux's limitations... (Thanks BrunoSX)"
 #       echo "Error: Failed to apply one or more patches."
 #       exit 1
 #   }
-#  clear
+clear
 else
 echo "Circumventing crappy SELinux's limitations... (Thanks BrunoSX)"
 patch -d wine -Np1 < "${scriptdir}"/ndis-proot.patch || {
@@ -567,11 +567,11 @@ fi
 ### Experimental addition to address space hackery
 if [ "$TERMUX_GLIBC" = "true" ]; then
 echo "Applying additional address space patch... (credits to Bylaws)"
-wget -O address-space.patch https://github.com/bylaws/wine/commit/c12890cafb580764c076e4231636cafaf6e35089.patch
-patch -p1 < address-space.patch || {
-        echo "This patch did not apply. Stopping..."
-	exit 1
-    }
+# wget -O address-space.patch https://github.com/bylaws/wine/commit/c12890cafb580764c076e4231636cafaf6e35089.patch
+# patch -p1 < address-space.patch || {
+#        echo "This patch did not apply. Stopping..."
+#	exit 1
+#    }
     clear
 fi
 
