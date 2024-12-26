@@ -552,10 +552,10 @@ fi
 
 echo "Applying CPU topology patch"
 if [ "$WINE_BRANCH" = "staging" ]; then
-patch -p1 < "${scriptdir}"/wine-cpu-topology.patch || {
-        echo "Error: Failed to revert one or two patches. Stopping."
-        exit 1
-    }
+# patch -p1 < "${scriptdir}"/wine-cpu-topology.patch || {
+#        echo "Error: Failed to revert one or two patches. Stopping."
+#       exit 1
+#    }
    clear
 elif [ "WINE_BRANCH" = "staging-tkg" ]; then
 patch -p1 < "${scriptdir}"/wine-cpu-topology-tkg.patch || {
