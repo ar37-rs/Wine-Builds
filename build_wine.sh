@@ -517,11 +517,11 @@ if [ "$TERMUX_GLIBC" = "true" ]; then
 #       echo "Error: Failed to apply one or more patches."
 #       exit 1
 #   }
-echo "Patching desktop threading"
-patch -d wine -Np1 < "${scriptdir}"/wineserverdesktopthreading.patch || {
-        echo "Error: Failed to apply desktop threading patch."
-        exit 1
-    }
+# echo "Patching desktop threading"
+# patch -d wine -Np1 < "${scriptdir}"/wineserverdesktopthreading.patch || {
+#        echo "Error: Failed to apply desktop threading patch."
+#        exit 1
+#   }
 clear
 else
 echo "Circumventing crappy SELinux's limitations... (Thanks BrunoSX)"
