@@ -138,8 +138,9 @@ if [ "${EXPERIMENTAL_WOW64}" = "true" ]; then
 
    build_with_bwrap () {
 		BOOTSTRAP_PATH="${BOOTSTRAP_X64}"
-
-    bwrap --cap-add SYS_ADMIN --security-opt apparmor=unconfined --security-opt seccomp=unconfined --ro-bind "${BOOTSTRAP_PATH}" / --dev /dev --ro-bind /sys /sys \
+    sudo sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
+    sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+    bwrap --ro-bind "${BOOTSTRAP_PATH}" / --dev /dev --ro-bind /sys /sys \
 		  --proc /proc --tmpfs /tmp --tmpfs /home --tmpfs /run --tmpfs /var \
 		  --tmpfs /mnt --tmpfs /media --bind "${BUILD_DIR}" "${BUILD_DIR}" \
 		  --bind-try "${XDG_CACHE_HOME}"/ccache "${XDG_CACHE_HOME}"/ccache \
@@ -201,8 +202,10 @@ build_with_bwrap () {
 	if [ "${1}" = "32" ] || [ "${1}" = "64" ]; then
 		shift
 	fi
-
-    bwrap --cap-add SYS_ADMIN --security-opt apparmor=unconfined --security-opt seccomp=unconfined --ro-bind "${BOOTSTRAP_PATH}" / --dev /dev --ro-bind /sys /sys \
+    sudo sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
+    sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+    
+    bwrap --ro-bind "${BOOTSTRAP_PATH}" / --dev /dev --ro-bind /sys /sys \
 		  --proc /proc --tmpfs /tmp --tmpfs /home --tmpfs /run --tmpfs /var \
 		  --tmpfs /mnt --tmpfs /media --bind "${BUILD_DIR}" "${BUILD_DIR}" \
 		  --bind-try "${XDG_CACHE_HOME}"/ccache "${XDG_CACHE_HOME}"/ccache \
