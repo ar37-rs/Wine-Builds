@@ -694,7 +694,7 @@ export XZ_OPT="-9"
 
 if [ "${EXPERIMENTAL_WOW64}" = "true" ]; then
         # ls
-	mv wine-staging-git wine-${BUILD_NAME}-exp-wow64-amd64
+	mv wine-${BUILD_NAME}-amd64 wine-${BUILD_NAME}-exp-wow64-amd64
 
 	builds_list="wine-${BUILD_NAME}-exp-wow64-amd64"
 else
