@@ -257,7 +257,8 @@ fi
 
 # Replace the "latest" parameter with the actual latest Wine version
 if [ "${WINE_VERSION}" = "latest" ] || [ -z "${WINE_VERSION}" ]; then
-	WINE_VERSION="$(wget -q -O - "https://raw.githubusercontent.com/wine-mirror/wine/master/VERSION" | tail -c +14)"
+	# WINE_VERSION="$(wget -q -O - "https://raw.githubusercontent.com/wine-mirror/wine/master/VERSION" | tail -c +14)"
+        WINE_VERSION=9.19
 fi
 
 # Stable and Development versions have a different source code location
@@ -367,7 +368,6 @@ else
     else
     BUILD_NAME="${WINE_VERSION}"-staging
 fi
-    export WINE_VERSION=9.18
     wget -q --show-progress "https://github.com/wine-staging/wine-staging/archive/v${WINE_VERSION}.tar.gz"
     tar xf v"${WINE_VERSION}".tar.gz
 
