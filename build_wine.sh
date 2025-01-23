@@ -367,7 +367,7 @@ else
     else
     BUILD_NAME="${WINE_VERSION}"-staging
 fi
-    export WINE_VERSION=9.19
+    export WINE_VERSION=9.18
     wget -q --show-progress "https://github.com/wine-staging/wine-staging/archive/v${WINE_VERSION}.tar.gz"
     tar xf v"${WINE_VERSION}".tar.gz
 
