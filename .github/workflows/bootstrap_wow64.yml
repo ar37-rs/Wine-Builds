@@ -21,7 +21,7 @@ jobs:
           cd /opt
           sudo tar -I "xz -T0 -9" -cpf bootstraps_wow64.tar.xz chroots
           sha256sum *.tar.xz
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Bootstraps WoW64
           path: /opt/bootstraps_wow64.tar.xz
