@@ -442,7 +442,21 @@ fi
 # Staging-tkg part isn't finished and will not build if it's Wine 9.4 and lower.
 
 if [ "$TERMUX_GLIBC" = "true" ]; then
-    cp "${scriptdir}"/configure wine
+    rm -rf wine/server/fd.c
+    if [ -f wine/server/fd.c ]; then
+        echo "fd.c found."
+    else
+        echo "fd.c not found."
+    fi
+    
+    cp "${scriptdir}"/fd.c wine/server
+    
+    if [ -f wine/server/fd.c ]; then
+        echo "fd.c found."
+    else
+        echo "fd.c not found."
+    fi
+    
     echo "Applying additional patches for Termux Glibc..."
 
     if [ "$WINE_BRANCH" = "staging" ]; then
