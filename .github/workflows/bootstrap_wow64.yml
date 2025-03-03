@@ -7,14 +7,14 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Create bootstraps
         run: |
-          sudo apt update
+          sudo apt update && sudo apt upgrade
           sudo apt install debootstrap perl
           chmod +x ubuntu_bootstrap_wow64.sh
           sudo ./ubuntu_bootstrap_wow64.sh
