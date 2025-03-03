@@ -628,7 +628,7 @@ export CFLAGS="${CFLAGS_X64}"
 export CXXFLAGS="${CFLAGS_X64}"
 export CROSSCFLAGS="${CROSSCFLAGS_X64}"
 export CROSSCXXFLAGS="${CROSSCFLAGS_X64}"
-ls
+cd wine-staging-git && ls
 exit
 mkdir "${BUILD_DIR}"/build64
 cd "${BUILD_DIR}"/build64 || exit
