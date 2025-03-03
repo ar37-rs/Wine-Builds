@@ -300,22 +300,7 @@ else
 
     wget -q --show-progress "https://github.com/wine-staging/wine-staging/archive/v${WINE_VERSION}.tar.gz"
     tar xf v"${WINE_VERSION}".tar.gz
-    
-    if [ "$(echo "$WINE_VERSION" | cut -c3)" = "0" ]; then
-	WINE_URL_VERSION=$(echo "$WINE_VERSION" | cut -c1).0
-    else
-	WINE_URL_VERSION=$(echo "$WINE_VERSION" | cut -c1).x
-    fi
-    
-    wget -q --show-progress "https://dl.winehq.org/wine/source/${WINE_URL_VERSION}/wine-${WINE_VERSION}.tar.xz"
-    tar xf "wine-${WINE_VERSION}.tar.xz"
-    mv "wine-${WINE_VERSION}" wine
-  
-    if [ -f wine-staging-"${WINE_VERSION}"/patches/patchinstall.sh ]; then
-        staging_patcher=("${BUILD_DIR}"/wine-staging-"${WINE_VERSION}"/patches/patchinstall.sh DESTDIR="${BUILD_DIR}"/wine)
-    else
-        staging_patcher=("${BUILD_DIR}"/wine-staging-"${WINE_VERSION}"/staging/patchinstall.py)
-    fi
+    mv wine-staging-"${WINE_VERSION}" wine
 fi
 
 # Wine-Staging patch arguments
@@ -338,19 +323,6 @@ fi
    elif [ "$TERMUX_PROOT" = "true" ] && [ "$WINE_BRANCH" = "vanilla" ] && [ "${EXPERIMENTAL_WOW64}" = "true" ]; then
     STAGING_ARGS="eventfd_synchronization winecfg_Staging"
     fi
-
-		ls && cd wine || exit 1
-		if [ -n "${STAGING_ARGS}" ]; then
-			"${staging_patcher[@]}" ${STAGING_ARGS}
-		else
-			echo "Skipping Wine-Staging patches..."
-		fi
-     
-		if [ $? -ne 0 ]; then
-			echo
-			echo "Wine-Staging patches were not applied correctly!"
-			exit 1
-		fi
 
 cd "${BUILD_DIR}" || exit 1
 
