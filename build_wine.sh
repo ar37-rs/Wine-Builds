@@ -300,6 +300,7 @@ else
 
     wget -q --show-progress "https://github.com/wine-staging/wine-staging/archive/v${WINE_VERSION}.tar.gz"
     tar xf v"${WINE_VERSION}".tar.gz
+    mv wine-staging-"${WINE_VERSION}" wine
 fi
 
 # Wine-Staging patch arguments
