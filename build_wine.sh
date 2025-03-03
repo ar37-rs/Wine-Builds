@@ -628,7 +628,8 @@ export CFLAGS="${CFLAGS_X64}"
 export CXXFLAGS="${CFLAGS_X64}"
 export CROSSCFLAGS="${CROSSCFLAGS_X64}"
 export CROSSCXXFLAGS="${CROSSCFLAGS_X64}"
-
+ls
+exit
 mkdir "${BUILD_DIR}"/build64
 cd "${BUILD_DIR}"/build64 || exit
 ${BWRAP64} cp "${scriptdir}"/fd.c "${BUILD_DIR}"/wine/server
