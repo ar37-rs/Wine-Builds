@@ -353,7 +353,7 @@ fi
 		fi
 
 cd "${BUILD_DIR}" || exit 1
-fi
+
 
 if [ "$TERMUX_PROOT" = "true" ]; then
     if [ "$WINE_BRANCH" = "staging" ] || [ "$WINE_BRANCH" = "staging-tkg" ] || [ "$WINE_BRANCH" = "proton" ]; then
