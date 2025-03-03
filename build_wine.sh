@@ -91,7 +91,7 @@ export DO_NOT_COMPILE="false"
 # Make sure that ccache is installed before enabling this.
 export USE_CCACHE="${USE_CCACHE:-false}"
 
-export WINE_BUILD_OPTIONS="--with-wine-tools=wine/tools --disable-winemenubuilder --disable-win16 --enable-win64 --disable-tests --without-capi --without-coreaudio --without-cups --without-gphoto --without-osmesa --without-oss --without-pcap --without-pcsclite --without-sane --without-udev --without-unwind --without-usb --without-v4l2 --without-wayland --without-xinerama"
+export WINE_BUILD_OPTIONS="--disable-winemenubuilder --disable-win16 --enable-win64 --disable-tests --without-capi --without-coreaudio --without-cups --without-gphoto --without-osmesa --without-oss --without-pcap --without-pcsclite --without-sane --without-udev --without-unwind --without-usb --without-v4l2 --without-wayland --without-xinerama"
 
 # A temporary directory where the Wine source code will be stored.
 # Do not set this variable to an existing non-empty directory!
@@ -348,39 +348,38 @@ else
 	fi
 
         if [ "$WINE_BRANCH" = "staging" ] || [ "$WINE_BRANCH" = "vanilla" ]; then
-	if [ "${WINE_VERSION}" = "git" ]; then
-    git clone https://github.com/wine-staging/wine-staging wine-staging-"${WINE_VERSION}"
-    upstream_commit="$(cat wine-staging-"${WINE_VERSION}"/staging/upstream-commit | head -c 7)"
-    git -C wine checkout "${upstream_commit}"
-    if [ "$WINE_BRANCH" = "vanilla" ]; then
-    BUILD_NAME="${WINE_VERSION}-${upstream_commit}"
-    else
-    BUILD_NAME="${WINE_VERSION}-${upstream_commit}-staging"
-    fi
-else
-    if [ -n "${STAGING_VERSION}" ]; then
-        WINE_VERSION="${STAGING_VERSION}"
-    fi
+            if [ "${WINE_VERSION}" = "git" ]; then
+                git clone https://github.com/wine-staging/wine-staging wine-staging-"${WINE_VERSION}"
+                upstream_commit="$(cat wine-staging-"${WINE_VERSION}"/staging/upstream-commit | head -c 7)"
+                git -C wine checkout "${upstream_commit}"
+                if [ "$WINE_BRANCH" = "vanilla" ]; then
+                BUILD_NAME="${WINE_VERSION}-${upstream_commit}"
+            else
+                BUILD_NAME="${WINE_VERSION}-${upstream_commit}-staging"
+            fi
+        else
+             if [ -n "${STAGING_VERSION}" ]; then
+                 WINE_VERSION="${STAGING_VERSION}"
+             fi
 
-    if [ "${WINE_BRANCH}" = "vanilla" ]; then
-    BUILD_NAME="${WINE_VERSION}"
-    else
-    BUILD_NAME="${WINE_VERSION}"-staging
-fi
-    wget -q --show-progress "https://github.com/wine-staging/wine-staging/archive/v${WINE_VERSION}.tar.gz"
-    tar xf v"${WINE_VERSION}".tar.gz
+             if [ "${WINE_BRANCH}" = "vanilla" ]; then
+                 BUILD_NAME="${WINE_VERSION}"
+             else
+                 BUILD_NAME="${WINE_VERSION}"-staging
+             fi
+             wget -q --show-progress "https://github.com/wine-staging/wine-staging/archive/v${WINE_VERSION}.tar.gz"
+             tar xf v"${WINE_VERSION}".tar.gz
 
-    if [ ! -f v"${WINE_VERSION}".tar.gz ]; then
-        git clone https://github.com/wine-staging/wine-staging wine-staging-"${WINE_VERSION}"
-    fi
-fi
+            if [ ! -f v"${WINE_VERSION}".tar.gz ]; then
+                git clone https://github.com/wine-staging/wine-staging wine-staging-"${WINE_VERSION}"
+            fi
+        fi
 
-if [ -f wine-staging-"${WINE_VERSION}"/patches/patchinstall.sh ]; then
-    staging_patcher=("${BUILD_DIR}"/wine-staging-"${WINE_VERSION}"/patches/patchinstall.sh
-                    DESTDIR="${BUILD_DIR}"/wine)
-else
-    staging_patcher=("${BUILD_DIR}"/wine-staging-"${WINE_VERSION}"/staging/patchinstall.py)
-fi
+        if [ -f wine-staging-"${WINE_VERSION}"/patches/patchinstall.sh ]; then
+            staging_patcher=("${BUILD_DIR}"/wine-staging-"${WINE_VERSION}"/patches/patchinstall.sh DESTDIR="${BUILD_DIR}"/wine)
+        else
+           staging_patcher=("${BUILD_DIR}"/wine-staging-"${WINE_VERSION}"/staging/patchinstall.py)
+        fi
 fi
 
 # Wine-Staging patch arguments
@@ -442,7 +441,7 @@ fi
 # Staging-tkg part isn't finished and will not build if it's Wine 9.4 and lower.
 
 if [ "$TERMUX_GLIBC" = "true" ]; then
-    mv "${scriptdir}"/fd.bak wine/server/fd.c
+    # mv "${scriptdir}"/fd.bak wine/server/fd.c
     echo "Applying additional patches for Termux Glibc..."
     if [ "$WINE_BRANCH" = "staging" ]; then
     echo "Applying esync patch"
