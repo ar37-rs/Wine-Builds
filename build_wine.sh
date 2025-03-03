@@ -404,7 +404,7 @@ fi
     STAGING_ARGS="eventfd_synchronization winecfg_Staging"
     fi
 
-		cd wine || exit 1
+		ls && cd wine || exit 1
 		if [ -n "${STAGING_ARGS}" ]; then
 			"${staging_patcher[@]}" ${STAGING_ARGS}
 		else
