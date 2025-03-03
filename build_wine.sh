@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 ########################################################################
-###
+##
 ## A script for Wine compilation.
 ## By default it uses two Ubuntu bootstraps (x32 and x64), which it enters
-## with bubblewrap (root rights are not required)..
+## with bubblewrap (root rights are not required).
 ##
 ## This script requires: git, wget, autoconf, xz, bubblewrap
 ##
@@ -201,7 +201,7 @@ build_with_bwrap () {
 	if [ "${1}" = "32" ] || [ "${1}" = "64" ]; then
 		shift
 	fi
-    
+
     bwrap --ro-bind "${BOOTSTRAP_PATH}" / --dev /dev --ro-bind /sys /sys \
 		  --proc /proc --tmpfs /tmp --tmpfs /home --tmpfs /run --tmpfs /var \
 		  --tmpfs /mnt --tmpfs /media --bind "${BUILD_DIR}" "${BUILD_DIR}" \
@@ -294,93 +294,12 @@ if [ -n "${CUSTOM_SRC_PATH}" ]; then
 
 	WINE_VERSION="$(cat wine/VERSION | tail -c +14)"
 	BUILD_NAME="${WINE_VERSION}"-custom
-elif [ "$WINE_BRANCH" = "staging-tkg" ]; then
-	git clone https://github.com/Kron4ek/wine-tkg wine
-
-	WINE_VERSION="$(cat wine/VERSION | tail -c +14)"
-	BUILD_NAME="${WINE_VERSION}"-staging-tkg
-elif [ "$WINE_BRANCH" = "wayland" ]; then
-	git clone https://github.com/Kron4ek/wine-wayland wine
-
-	WINE_VERSION="$(cat wine/VERSION | tail -c +14)"
-	BUILD_NAME="${WINE_VERSION}"-wayland
-
-	export WINE_BUILD_OPTIONS="--without-x --without-xcomposite \
-                               --without-xfixes --without-xinerama \
-                               --without-xinput --without-xinput2 \
-                               --without-xrandr --without-xrender \
-                               --without-xshape --without-xshm  \
-                               --without-xslt --without-xxf86vm \
-                               --without-xcursor --without-opengl \
-                               ${WINE_BUILD_OPTIONS}"
-elif [ "$WINE_BRANCH" = "proton" ]; then
-	if [ -z "${PROTON_BRANCH}" ]; then
-		git clone https://github.com/ValveSoftware/wine
-	else
-		git clone https://github.com/ValveSoftware/wine -b "${PROTON_BRANCH}"
-	fi
-
-	if [ "${PROTON_BRANCH}" = "experimental_8.0" ]; then
-		patch -d wine -Np1 < "${scriptdir}"/proton-exp-8.0.patch
-	fi
-
-	if [ "${PROTON_BRANCH}" = "experimental_9.0" ] || [ "${PROTON_BRANCH}" = "bleeding-edge" ]; then
-	 patch -d wine -Np1 < "${scriptdir}"/proton-exp-9.0.patch
-	fi
-
-
-	WINE_VERSION="$(cat wine/VERSION | tail -c +14)-$(git -C wine rev-parse --short HEAD)"
-	if [[ "${PROTON_BRANCH}" == "experimental_"* ]] || [ "${PROTON_BRANCH}" = "bleeding-edge" ]; then
-		BUILD_NAME=proton-exp-"${WINE_VERSION}"
-	else
-		BUILD_NAME=proton-"${WINE_VERSION}"
-	fi
 else
-	if [ "${WINE_VERSION}" = "git" ]; then
-		git clone https://gitlab.winehq.org/wine/wine.git wine
-		BUILD_NAME="${WINE_VERSION}-$(git -C wine rev-parse --short HEAD)"
-	else
-		BUILD_NAME="${WINE_VERSION}"
-
-		wget -q --show-progress "https://dl.winehq.org/wine/source/${WINE_URL_VERSION}/wine-${WINE_VERSION}.tar.xz"
-		tar xf "wine-${WINE_VERSION}.tar.xz"
-		mv "wine-${WINE_VERSION}" wine
-	fi
-
-        if [ "$WINE_BRANCH" = "staging" ] || [ "$WINE_BRANCH" = "vanilla" ]; then
-	if [ "${WINE_VERSION}" = "git" ]; then
-    git clone https://github.com/wine-staging/wine-staging wine-staging-"${WINE_VERSION}"
-    upstream_commit="$(cat wine-staging-"${WINE_VERSION}"/staging/upstream-commit | head -c 7)"
-    git -C wine checkout "${upstream_commit}"
-    if [ "$WINE_BRANCH" = "vanilla" ]; then
-    BUILD_NAME="${WINE_VERSION}-${upstream_commit}"
-    else
-    BUILD_NAME="${WINE_VERSION}-${upstream_commit}-staging"
-    fi
-else
-    if [ -n "${STAGING_VERSION}" ]; then
-        WINE_VERSION="${STAGING_VERSION}"
-    fi
-
-    if [ "${WINE_BRANCH}" = "vanilla" ]; then
-    BUILD_NAME="${WINE_VERSION}"
-    else
+    WINE_VERSION=9.16
     BUILD_NAME="${WINE_VERSION}"-staging
-fi
+
     wget -q --show-progress "https://github.com/wine-staging/wine-staging/archive/v${WINE_VERSION}.tar.gz"
     tar xf v"${WINE_VERSION}".tar.gz
-
-    if [ ! -f v"${WINE_VERSION}".tar.gz ]; then
-        git clone https://github.com/wine-staging/wine-staging wine-staging-"${WINE_VERSION}"
-    fi
-fi
-
-if [ -f wine-staging-"${WINE_VERSION}"/patches/patchinstall.sh ]; then
-    staging_patcher=("${BUILD_DIR}"/wine-staging-"${WINE_VERSION}"/patches/patchinstall.sh
-                    DESTDIR="${BUILD_DIR}"/wine)
-else
-    staging_patcher=("${BUILD_DIR}"/wine-staging-"${WINE_VERSION}"/staging/patchinstall.py)
-fi
 fi
 
 # Wine-Staging patch arguments
@@ -442,8 +361,8 @@ fi
 # Staging-tkg part isn't finished and will not build if it's Wine 9.4 and lower.
 
 if [ "$TERMUX_GLIBC" = "true" ]; then
-    mv "${scriptdir}"/fd.bak wine/server/fd.c
     echo "Applying additional patches for Termux Glibc..."
+
     if [ "$WINE_BRANCH" = "staging" ]; then
     echo "Applying esync patch"
     patch -d wine -Np1 < "${scriptdir}"/esync.patch && \
@@ -509,27 +428,22 @@ if [ "$TERMUX_GLIBC" = "true" ]; then
 fi
 fi
     
-# NDIS patch for fixing crappy Android's SELinux limitations.
-if [ "$TERMUX_GLIBC" = "true" ]; then
-# echo "Circumventing crappy SELinux's limitations... (Thanks BrunoSX)"
-# patch -d wine -Np1 < "${scriptdir}"/ndis.patch || {
-#       echo "Error: Failed to apply one or more patches."
-#       exit 1
-#   }
-# echo "Patching desktop threading"
-# patch -d wine -Np1 < "${scriptdir}"/wineserverdesktopthreading.patch || {
-#        echo "Error: Failed to apply desktop threading patch."
+## NDIS patch for fixing crappy Android's SELinux limitations.
+#if [ "$TERMUX_GLIBC" = "true" ]; then
+#echo "Circumventing crappy SELinux's limitations... (Thanks BrunoSX)"
+#patch -d wine -Np1 < "${scriptdir}"/ndis.patch || {
+#        echo "Error: Failed to apply one or more patches."
 #        exit 1
-#   }
-clear
-else
-echo "Circumventing crappy SELinux's limitations... (Thanks BrunoSX)"
-patch -d wine -Np1 < "${scriptdir}"/ndis-proot.patch || {
-        echo "Error: Failed to apply one or more patches."
-        exit 1
-    }
-    clear
-fi
+#    }
+#    clear
+#else
+#echo "Circumventing crappy SELinux's limitations... (Thanks BrunoSX)"
+#patch -d wine -Np1 < "${scriptdir}"/ndis-proot.patch || {
+#        echo "Error: Failed to apply one or more patches."
+#        exit 1
+#    }
+#    clear
+#fi
 
 if [ ! -d wine ]; then
 	clear
@@ -554,28 +468,27 @@ patch -p1 -R < "${scriptdir}"/inputbridgefix.patch || {
    clear
 fi
 
-echo "Applying CPU topology patch"
-if [ "$WINE_BRANCH" = "staging" ]; then
-# patch -p1 < "${scriptdir}"/wine-cpu-topology.patch || {
+#echo "Applying CPU topology patch"
+#if [ "$WINE_BRANCH" = "staging" ]; then
+#patch -p1 < "${scriptdir}"/wine-cpu-topology-wine-9.22.patch || {
 #        echo "Error: Failed to revert one or two patches. Stopping."
-#       exit 1
+#        exit 1
 #    }
-   clear
-elif [ "WINE_BRANCH" = "staging-tkg" ]; then
-patch -p1 < "${scriptdir}"/wine-cpu-topology-tkg.patch || {
-        echo "Error: Failed to apply one or two patches. Stopping."
-        exit 1
-    }
-fi
+#   clear
+#elif [ "WINE_BRANCH" = "staging-tkg" ]; then
+#patch -p1 < "${scriptdir}"/wine-cpu-topology-tkg.patch || {
+#        echo "Error: Failed to apply one or two patches. Stopping."
+#        exit 1
+#    }
+#fi
 
 ### Experimental addition to address space hackery
 if [ "$TERMUX_GLIBC" = "true" ]; then
-# echo "Applying additional address space patch... (credits to Bylaws)"
-# wget -O address-space.patch https://github.com/bylaws/wine/commit/c12890cafb580764c076e4231636cafaf6e35089.patch
-# patch -p1 < address-space.patch || {
-#        echo "This patch did not apply. Stopping..."
-#	exit 1
-#    }
+echo "Applying additional address space patch... (credits to Bylaws)"
+patch -p1 < "${scriptdir}"/wine-virtual-memory.patch || {
+        echo "This patch did not apply. Stopping..."
+	exit 1
+    }
     clear
 fi
 
@@ -692,7 +605,6 @@ fi
 export XZ_OPT="-9"
 
 if [ "${EXPERIMENTAL_WOW64}" = "true" ]; then
-        # ls
 	mv wine-${BUILD_NAME}-amd64 wine-${BUILD_NAME}-exp-wow64-amd64
 
 	builds_list="wine-${BUILD_NAME}-exp-wow64-amd64"
