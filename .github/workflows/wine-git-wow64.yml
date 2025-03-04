@@ -21,7 +21,10 @@ jobs:
           path: /opt
       - name: Build Wine
         run: |
-          sudo apt update && sudo apt upgrade
+          sudo apt update
+          snap disable firefox
+          snap remove --purge firefox
+          sudo apt upgrade
           sudo apt install debootstrap perl git wget xz-utils bubblewrap autoconf
           sudo sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
           sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
