@@ -28,7 +28,7 @@ fi
 #
 # This variable affects only vanilla and staging branches. Other branches
 # use their own versions.
-export WINE_VERSION="${WINE_VERSION:-latest}"
+export WINE_VERSION=9.18
 
 # Available branches: vanilla, staging, staging-tkg, proton, wayland
 export WINE_BRANCH="${WINE_BRANCH:-staging}"
@@ -42,7 +42,7 @@ export PROTON_BRANCH="${PROTON_BRANCH:-proton_8.0}"
 
 # Sometimes Wine and Staging versions don't match (for example, 5.15.2).
 # Leave this empty to use Staging version that matches the Wine version.
-export STAGING_VERSION="${STAGING_VERSION:-}"
+export STAGING_VERSION=9.18
 
 #######################################################################
 # If you're building specifically for Termux glibc, set this to true.
@@ -256,9 +256,7 @@ if ! command -v xz 1>/dev/null; then
 fi
 
 # Replace the "latest" parameter with the actual latest Wine version
-if [ "${WINE_VERSION}" = "latest" ] || [ -z "${WINE_VERSION}" ]; then
-	WINE_VERSION="$(wget -q -O - "https://raw.githubusercontent.com/wine-mirror/wine/master/VERSION" | tail -c +14)"
-fi
+
 
 # Stable and Development versions have a different source code location
 # Determine if the chosen version is stable or development
