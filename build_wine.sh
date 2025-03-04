@@ -441,10 +441,10 @@ fi
 # Staging-tkg part isn't finished and will not build if it's Wine 9.4 and lower.
 
 if [ "$TERMUX_GLIBC" = "true" ]; then
-    # ls && exit
-    # mv "${scriptdir}"/fd.bak wine-staging-git/server/fd.c
     echo "Applying additional patches for Termux Glibc..."
     if [ "$WINE_BRANCH" = "staging" ]; then
+    echo "Applying disable epoll_pwait2 patch"
+    patch -d wine -Np1 < "${scriptdir}"/disable_epoll_pwait2.patch && \
     echo "Applying esync patch"
     patch -d wine -Np1 < "${scriptdir}"/esync.patch && \
     echo "Applying address space patch"
@@ -630,7 +630,6 @@ export CROSSCFLAGS="${CROSSCFLAGS_X64}"
 export CROSSCXXFLAGS="${CROSSCFLAGS_X64}"
 mkdir "${BUILD_DIR}"/build64
 cd "${BUILD_DIR}"/build64 || exit
-# cp "${scriptdir}"/fd.c "${BUILD_DIR}"/wine/server
 ${BWRAP64} "${BUILD_DIR}"/wine/configure --enable-archs=i386,x86_64 ${WINE_BUILD_OPTIONS} --prefix "${BUILD_DIR}"/wine-"${BUILD_NAME}"-amd64
 ${BWRAP64} make -j8
 ${BWRAP64} make install
@@ -646,7 +645,6 @@ export CROSSCXXFLAGS="${CROSSCFLAGS_X64}"
 
 mkdir "${BUILD_DIR}"/build64
 cd "${BUILD_DIR}"/build64 || exit
-# cp "${scriptdir}"/fd.c "${BUILD_DIR}"/wine/server
 ${BWRAP64} "${BUILD_DIR}"/wine/configure --enable-win64 ${WINE_BUILD_OPTIONS} --prefix "${BUILD_DIR}"/wine-"${BUILD_NAME}"-amd64
 ${BWRAP64} make -j8
 ${BWRAP64} make install
