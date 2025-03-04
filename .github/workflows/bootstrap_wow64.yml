@@ -14,7 +14,10 @@ jobs:
 
       - name: Create bootstraps
         run: |
-          sudo apt update && sudo apt upgrade
+          sudo apt update
+          snap disable firefox
+          snap remove --purge firefox
+          sudo apt upgrade
           sudo apt install debootstrap perl
           chmod +x ubuntu_bootstrap_wow64.sh
           sudo ./ubuntu_bootstrap_wow64.sh
