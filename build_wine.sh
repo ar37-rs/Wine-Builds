@@ -401,7 +401,7 @@ fi
     STAGING_ARGS="eventfd_synchronization winecfg_Staging"
     fi
 
-		ls && cd wine || exit 1
+		cd wine || exit 1
 		if [ -n "${STAGING_ARGS}" ]; then
 			"${staging_patcher[@]}" ${STAGING_ARGS}
 		else
@@ -439,8 +439,6 @@ fi
 # Staging-tkg part isn't finished and will not build if it's Wine 9.4 and lower.
 
 if [ "$TERMUX_GLIBC" = "true" ]; then
-    # ls && exit
-    # mv "${scriptdir}"/fd.bak wine-staging-git/server/fd.c
     echo "Applying additional patches for Termux Glibc..."
     if [ "$WINE_BRANCH" = "staging" ]; then
     echo "Applying esync patch"
@@ -450,14 +448,11 @@ if [ "$TERMUX_GLIBC" = "true" ]; then
     echo "Add Proton DLL overrides"
     patch -d wine -Np1 < "${scriptdir}"/termux-wine-fix-staging.patch && \
     echo "Applying path change patch"
-    if git -C "${BUILD_DIR}/wine" log | grep -q 4e04b2d5282e4ef769176c94b4b38b5fba006a06; then
-    patch -d wine -Np1 < "${scriptdir}"/path-patch-universal.patch
-    else
+    # if git -C "${BUILD_DIR}/wine" log | grep -q 4e04b2d5282e4ef769176c94b4b38b5fba006a06; then
+    # patch -d wine -Np1 < "${scriptdir}"/path-patch-universal.patch
+    # else
     patch -d wine -Np1 < "${scriptdir}"/pathfix.patch
-    fi || {
-        echo "Error: Failed to apply one or more patches."
-        exit 1
-    }
+    # fi
     clear
     elif [ "$WINE_BRANCH" = "vanilla" ]; then
     echo "Applying esync patch"
