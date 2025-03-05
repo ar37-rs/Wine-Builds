@@ -548,7 +548,7 @@ echo "Fixing Input Bridge..."
 #        exit 1
 #    }
 #  clear
-elif [ "$WINE_BRANCH" = "staging" ] || [ "$WINE_BRANCH" = "vanilla" ]; then
+if [ "$WINE_BRANCH" = "staging" ] || [ "$WINE_BRANCH" = "vanilla" ]; then
 patch -p1 -R < "${scriptdir}"/inputbridgefix.patch || {
         echo "Error: Failed to revert one or two patches. Stopping."
         exit 1
