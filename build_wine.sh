@@ -462,6 +462,8 @@ if [ "$TERMUX_GLIBC" = "true" ]; then
     }
     clear
     elif [ "$WINE_BRANCH" = "vanilla" ]; then
+    echo "Applying disable epoll_pwait2 patch"
+    patch -d wine -Np1 < "${scriptdir}"/disable_epoll_pwait2.patch && \
     echo "Applying esync patch"
     patch -d wine -Np1 < "${scriptdir}"/esync.patch && \
     echo "Applying address space patch"
@@ -540,13 +542,13 @@ fi
 
 cd wine || exit 1
 echo "Fixing Input Bridge..."
-if [ "$WINE_BRANCH" = "vanilla" ]; then
-git revert --no-commit 2bfe81e41f93ce75139e3a6a2d0b68eb2dcb8fa6 || {
-        echo "Error: Failed to revert one or two patches. Stopping."
-        exit 1
-    }
-   clear
-elif [ "$WINE_BRANCH" = "staging" ] || [ "$WINE_BRANCH" = "staging-tkg" ]; then
+#if [ "$WINE_BRANCH" = "vanilla" ]; then
+# git revert --no-commit 2bfe81e41f93ce75139e3a6a2d0b68eb2dcb8fa6 || {
+#        echo "Error: Failed to revert one or two patches. Stopping."
+#        exit 1
+#    }
+#  clear
+elif [ "$WINE_BRANCH" = "staging" ] || [ "$WINE_BRANCH" = "vanilla" ]; then
 patch -p1 -R < "${scriptdir}"/inputbridgefix.patch || {
         echo "Error: Failed to revert one or two patches. Stopping."
         exit 1
