@@ -28,7 +28,7 @@ fi
 #
 # This variable affects only vanilla and staging branches. Other branches
 # use their own versions.
-export WINE_VERSION=9.18
+export WINE_VERSION=10.4
 
 # Available branches: vanilla, staging, staging-tkg, proton, wayland
 export WINE_BRANCH="${WINE_BRANCH:-staging}"
@@ -91,7 +91,7 @@ export DO_NOT_COMPILE="false"
 # Make sure that ccache is installed before enabling this.
 export USE_CCACHE="${USE_CCACHE:-false}"
 
-export WINE_BUILD_OPTIONS="--without-osmesa --disable-winemenubuilder --disable-win16 --enable-win64 --disable-tests --without-capi --without-coreaudio --without-cups --without-gphoto --without-oss --without-pcap --without-pcsclite --without-sane --without-udev --without-unwind --without-usb --without-v4l2 --without-wayland --without-xinerama"
+export WINE_BUILD_OPTIONS="--with-xinput --with-xinput2 --with-xrandr --with-xrender --with-xcomposite --with-xcursor --with-xfixes --without-osmesa --disable-winemenubuilder --disable-win16 --enable-win64 --disable-tests --without-capi --without-coreaudio --without-cups --without-gphoto --without-oss --without-pcap --without-pcsclite --without-sane --without-udev --without-unwind --without-usb --without-v4l2 --without-wayland --without-xinerama"
 
 # A temporary directory where the Wine source code will be stored.
 # Do not set this variable to an existing non-empty directory!
@@ -441,6 +441,8 @@ fi
 if [ "$TERMUX_GLIBC" = "true" ]; then
     echo "Applying additional patches for Termux Glibc..."
     if [ "$WINE_BRANCH" = "staging" ]; then
+    echo "Applying disable epoll_pwait2 patch"
+    patch -d wine -Np1 < "${scriptdir}"/disable_epoll_pwait2.patch && \
     echo "Applying esync patch"
     patch -d wine -Np1 < "${scriptdir}"/esync.patch && \
     echo "Applying address space patch"
@@ -455,6 +457,8 @@ if [ "$TERMUX_GLIBC" = "true" ]; then
     # fi
     clear
     elif [ "$WINE_BRANCH" = "vanilla" ]; then
+    echo "Applying disable epoll_pwait2 patch"
+    patch -d wine -Np1 < "${scriptdir}"/disable_epoll_pwait2.patch && \
     echo "Applying esync patch"
     patch -d wine -Np1 < "${scriptdir}"/esync.patch && \
     echo "Applying address space patch"
