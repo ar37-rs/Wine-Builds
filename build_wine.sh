@@ -42,7 +42,7 @@ export PROTON_BRANCH="${PROTON_BRANCH:-proton_8.0}"
 
 # Sometimes Wine and Staging versions don't match (for example, 5.15.2).
 # Leave this empty to use Staging version that matches the Wine version.
-export STAGING_VERSION=9.18
+export STAGING_VERSION=10.4
 
 #######################################################################
 # If you're building specifically for Termux glibc, set this to true.
