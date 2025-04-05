@@ -443,6 +443,8 @@ fi
 if [ "$TERMUX_GLIBC" = "true" ]; then
     echo "Applying additional patches for Termux Glibc..."
     if [ "$WINE_BRANCH" = "staging" ]; then
+    echo "Applying disable assert virtual.c patch"
+    patch -d wine -Np1 < "${scriptdir}"/virtual.patch && \
     echo "Applying disable epoll_pwait2 patch"
     patch -d wine -Np1 < "${scriptdir}"/disable_epoll_pwait2.patch && \
     echo "Applying esync patch"
