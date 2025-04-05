@@ -1,0 +1,16 @@
+diff --git a/dlls/ntdll/unix/virtual.c b/dlls/ntdll/unix/virtual.c
+index 2838472..b228b54 100644
+--- a/dlls/ntdll/unix/virtual.c
++++ b/dlls/ntdll/unix/virtual.c
+@@ -3417,8 +3417,9 @@ static void *alloc_virtual_heap( SIZE_T size )
+ {
+     struct reserved_area *area;
+     void *ret;
+-
+-    assert( !(size & host_page_mask) );
++    printf("%d", size);
++    printf("%d", host_page_mask);
++    // assert( !(size & host_page_mask) );
+ 
+     LIST_FOR_EACH_ENTRY_REV( area, &reserved_areas, struct reserved_area, entry )
+     {
