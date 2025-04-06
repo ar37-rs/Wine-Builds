@@ -28,7 +28,7 @@ fi
 #
 # This variable affects only vanilla and staging branches. Other branches
 # use their own versions.
-export WINE_VERSION=10.4
+export WINE_VERSION=9.18
 
 # Available branches: vanilla, staging, staging-tkg, proton, wayland
 export WINE_BRANCH="${WINE_BRANCH:-staging}"
@@ -42,7 +42,7 @@ export PROTON_BRANCH="${PROTON_BRANCH:-proton_8.0}"
 
 # Sometimes Wine and Staging versions don't match (for example, 5.15.2).
 # Leave this empty to use Staging version that matches the Wine version.
-export STAGING_VERSION=10.4
+export STAGING_VERSION=9.18
 
 #######################################################################
 # If you're building specifically for Termux glibc, set this to true.
