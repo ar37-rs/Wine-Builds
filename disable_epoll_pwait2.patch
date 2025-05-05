@@ -1,0 +1,13 @@
+diff --git a/server/fd.c b/server/fd.c
+index e1b969a..f93fa89 100644
+--- a/server/fd.c
++++ b/server/fd.c
+@@ -582,7 +582,7 @@ static inline void main_loop_epoll(void)
+         if (epoll_fd == -1) break;  /* an error occurred with epoll */
+ 
+ #ifdef HAVE_EPOLL_PWAIT2
+-        ret = epoll_pwait2( epoll_fd, events, ARRAY_SIZE( events ), timeout == -1 ? NULL : &ts, NULL );
++        ret = epoll_wait( epoll_fd, events, ARRAY_SIZE( events ), timeout );
+ #else
+         ret = epoll_wait( epoll_fd, events, ARRAY_SIZE( events ), timeout );
+ #endif
