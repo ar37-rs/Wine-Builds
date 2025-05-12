@@ -443,8 +443,8 @@ fi
 if [ "$TERMUX_GLIBC" = "true" ]; then
     echo "Applying additional patches for Termux Glibc..."
     if [ "$WINE_BRANCH" = "staging" ]; then
-    echo "Applying disable epoll_pwait2 patch"
-    patch -d wine -Np1 < "${scriptdir}"/disable_epoll_pwait2.patch && \
+    # echo "Applying disable epoll_pwait2 patch"
+    # patch -d wine -Np1 < "${scriptdir}"/disable_epoll_pwait2.patch && \
     echo "Applying esync patch"
     patch -d wine -Np1 < "${scriptdir}"/esync.patch && \
     echo "Applying address space patch"
@@ -462,8 +462,8 @@ if [ "$TERMUX_GLIBC" = "true" ]; then
     }
     clear
     elif [ "$WINE_BRANCH" = "vanilla" ]; then
-    echo "Applying disable epoll_pwait2 patch"
-    patch -d wine -Np1 < "${scriptdir}"/disable_epoll_pwait2.patch && \
+    # echo "Applying disable epoll_pwait2 patch"
+    # patch -d wine -Np1 < "${scriptdir}"/disable_epoll_pwait2.patch && \
     echo "Applying esync patch"
     patch -d wine -Np1 < "${scriptdir}"/esync.patch && \
     echo "Applying address space patch"
